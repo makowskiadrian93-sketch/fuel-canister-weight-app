@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fuel Canister Checker</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 48px;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: #16213e;
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    select, input[type="number"] {
+      width: 100%;
+      background: #0f3460;
+      border: 1px solid #1a4a7a;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1.05rem;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+      margin-bottom: 20px;
+    }
+
+    select:focus, input[type="number"]:focus {
+      border-color: #e94560;
+    }
+
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-wrapper::after {
+      content: "▾";
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-65%);
+      pointer-events: none;
+      color: #888;
+      font-size: 1.1rem;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button { opacity: 0.4; }
+
+    .weight-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .weight-row > div { flex: 1; margin-bottom: 0; }
+    .weight-row select { margin-bottom: 0; }
+    .weight-row input { margin-bottom: 0; }
+
+    /* Result */
+    .result {
+      display: none;
+      margin-top: 8px;
+    }
+
+    .result.visible { display: block; }
+
+    .fuel-pct {
+      font-size: 3.5rem;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .fuel-label {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    .bar-bg {
+      background: #0f3460;
+      border-radius: 999px;
+      height: 18px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.5s ease, background 0.5s ease;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .detail-box {
+      background: #0f3460;
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .detail-val {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .detail-lbl {
+      font-size: 0.7rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 2px;
+    }
+
+    .hint {
+      text-align: center;
+      font-size: 0.82rem;
+      color: #555;
+      margin-top: 14px;
+    }
+
+    .error-msg {
+      display: none;
+      background: #3d1520;
+      border: 1px solid #e94560;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 0.85rem;
+      color: #e94560;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .error-msg.visible { display: block; }
+
+    /* color coding */
+    .color-full    { color: #4ade80; }
+    .color-high    { color: #86efac; }
+    .color-mid     { color: #fbbf24; }
+    .color-low     { color: #fb923c; }
+    .color-empty   { color: #e94560; }
+
+    .bar-full  { background: #4ade80; }
+    .bar-high  { background: #86efac; }
+    .bar-mid   { background: #fbbf24; }
+    .bar-low   { background: #fb923c; }
+    .bar-empty { background: #e94560; }
+
+    /* Boil box */
+    .boil-box {
+      background: #0f3460;
+      border-radius: 12px;
+      padding: 16px 12px 14px;
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .boil-icon { font-size: 1.4rem; margin-bottom: 4px; }
+
+    .boil-count {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+    }
+
+    .boil-lbl {
+      font-size: 0.72rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: 3px;
+      margin-bottom: 8px;
+    }
+
+    .boil-sub {
+      font-size: 0.78rem;
+      color: #aaa;
+      margin-bottom: 12px;
+      min-height: 1em;
+    }
+
+    .boil-size-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .boil-size-lbl {
+      font-size: 0.72rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-right: 2px;
+    }
+
+    .boil-btn {
+      background: #1a4a7a;
+      border: 1px solid #1a4a7a;
+      border-radius: 20px;
+      color: #aaa;
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .boil-btn.active {
+      background: #e94560;
+      border-color: #e94560;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    @media (max-width: 380px) {
+      .fuel-pct { font-size: 2.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>⛽ Fuel Canister Checker</h1>
+<p class="subtitle">Weigh your canister → know your fuel</p>
+
+<div class="card">
+  <label>Canister Brand &amp; Size</label>
+  <div class="select-wrapper">
+    <select id="canister" onchange="calculate()">
+      <option value="">— Select canister —</option>
+      <option value="coleman-220">Coleman 220 g</option>
+      <option value="jetboil-100">Jetboil 100 g</option>
+      <option value="jetboil-230">Jetboil 230 g</option>
+      <option value="jetboil-450">Jetboil 450 g</option>
+      <option value="kovea-230">Kovea 230 g</option>
+      <option value="msr-110">MSR 110 g</option>
+      <option value="msr-227">MSR 227 g</option>
+      <option value="msr-450">MSR 450 g</option>
+      <option value="optimus-100">Optimus 100 g</option>
+      <option value="optimus-230">Optimus 230 g</option>
+      <option value="primus-100">Primus 100 g</option>
+      <option value="primus-230">Primus 230 g</option>
+      <option value="snowpeak-110">SnowPeak Gigapower 110 g</option>
+      <option value="snowpeak-220">SnowPeak Gigapower 220 g</option>
+    </select>
+  </div>
+
+  <label>Current Weight</label>
+  <div class="weight-row">
+    <div style="flex:2">
+      <input type="number" id="weight" placeholder="e.g. 220" min="0" max="800" oninput="calculate()" />
+    </div>
+    <div style="flex:1">
+      <div class="select-wrapper">
+        <select id="unit" onchange="calculate()">
+          <option value="g">g</option>
+          <option value="oz">oz</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="error-msg" id="errorMsg"></div>
+
+  <div class="result" id="result">
+    <div class="fuel-pct" id="pctDisplay">—</div>
+    <div class="fuel-label">fuel remaining</div>
+
+    <div class="bar-bg">
+      <div class="bar-fill" id="barFill" style="width:0%"></div>
+    </div>
+
+    <div class="details-grid">
+      <div class="detail-box">
+        <div class="detail-val" id="fuelLeft">—</div>
+        <div class="detail-lbl">Fuel left (g)</div>
+      </div>
+      <div class="detail-box">
+        <div class="detail-val" id="canisterWt">—</div>
+        <div class="detail-lbl">Empty weight (g)</div>
+      </div>
+      <div class="detail-box">
+        <div class="detail-val" id="fullWt">—</div>
+        <div class="detail-lbl">Full weight (g)</div>
+      </div>
+      <div class="detail-box">
+        <div class="detail-val" id="fuelCap">—</div>
+        <div class="detail-lbl">Total capacity (g)</div>
+      </div>
+    </div>
+
+    <div class="boil-box" id="boilBox">
+      <div class="boil-icon">🔥</div>
+      <div class="boil-count" id="boilCount">—</div>
+      <div class="boil-lbl">estimated boils left</div>
+      <div class="boil-sub" id="boilSub"></div>
+      <div class="boil-size-row">
+        <span class="boil-size-lbl">Pot size:</span>
+        <button class="boil-btn active" data-g="8"  onclick="setPotSize(this)">500 ml</button>
+        <button class="boil-btn"        data-g="12" onclick="setPotSize(this)">750 ml</button>
+        <button class="boil-btn"        data-g="16" onclick="setPotSize(this)">1 L</button>
+      </div>
+    </div>
+
+    <p class="hint" id="hintText"></p>
+  </div>
+</div>
+
+<script>
+  // g of fuel per boil by pot size
+  let gPerBoil = 8; // default: 500 ml
+
+  function setPotSize(btn) {
+    document.querySelectorAll(".boil-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    gPerBoil = parseInt(btn.dataset.g);
+    updateBoils();
+  }
+
+  let lastFuelLeft = 0;
+
+  function updateBoils() {
+    if (lastFuelLeft === null) return;
+    const boils = Math.floor(lastFuelLeft / gPerBoil);
+    document.getElementById("boilCount").textContent = boils > 0 ? boils : "< 1";
+    const potLabels = { 8: "500 ml", 12: "750 ml", 16: "1 L" };
+    document.getElementById("boilSub").textContent =
+      boils > 0
+        ? `~${gPerBoil}g fuel per ${potLabels[gPerBoil]} boil`
+        : "Not enough fuel for a full boil";
+  }
+
+  // Data: { empty, full, fuelWeight }
+  // All values from the reference table (empty = 0%, full = 100%)
+  const CANISTERS = {
+    "coleman-220":    { empty: 143, full: 363, fuel: 220 },
+    "jetboil-100":    { empty: 99,  full: 199, fuel: 100 },
+    "jetboil-230":    { empty: 152, full: 382, fuel: 230 },
+    "jetboil-450":    { empty: 216, full: 666, fuel: 450 },
+    "kovea-230":      { empty: 132, full: 362, fuel: 230 },
+    "msr-110":        { empty: 101, full: 211, fuel: 110 },
+    "msr-227":        { empty: 151, full: 378, fuel: 227 },
+    "msr-450":        { empty: 216, full: 666, fuel: 450 },
+    "optimus-100":    { empty: 100, full: 200, fuel: 100 },
+    "optimus-230":    { empty: 130, full: 360, fuel: 230 },
+    "primus-100":     { empty: 100, full: 200, fuel: 100 },
+    "primus-230":     { empty: 151, full: 381, fuel: 230 },
+    "snowpeak-110":   { empty: 103, full: 213, fuel: 110 },
+    "snowpeak-220":   { empty: 150, full: 370, fuel: 220 },
+  };
+
+  function calculate() {
+    const key = document.getElementById("canister").value;
+    const rawWeight = parseFloat(document.getElementById("weight").value);
+    const unit = document.getElementById("unit").value;
+    const result = document.getElementById("result");
+    const errMsg = document.getElementById("errorMsg");
+
+    result.classList.remove("visible");
+    errMsg.classList.remove("visible");
+
+    if (!key || isNaN(rawWeight) || rawWeight === "") return;
+
+    const weightG = unit === "oz" ? rawWeight * 28.3495 : rawWeight;
+    const c = CANISTERS[key];
+
+    if (weightG < c.empty - 5) {
+      errMsg.textContent = `Weight seems too low — empty ${c.fuel}g canister weighs ${c.empty}g.`;
+      errMsg.classList.add("visible");
+      return;
+    }
+    if (weightG > c.full + 5) {
+      errMsg.textContent = `Weight seems too high — full ${c.fuel}g canister weighs ${c.full}g.`;
+      errMsg.classList.add("visible");
+      return;
+    }
+
+    const fuelLeft = Math.max(0, weightG - c.empty);
+    lastFuelLeft = fuelLeft;
+    const pct = Math.min(100, Math.round((fuelLeft / c.fuel) * 100));
+
+    // Color tier
+    let tier;
+    if (pct >= 70)      tier = "full";
+    else if (pct >= 40) tier = "high";
+    else if (pct >= 20) tier = "mid";
+    else if (pct > 0)   tier = "low";
+    else                tier = "empty";
+
+    const pctEl = document.getElementById("pctDisplay");
+    pctEl.textContent = pct + "%";
+    pctEl.className = "fuel-pct color-" + tier;
+
+    const bar = document.getElementById("barFill");
+    bar.style.width = pct + "%";
+    bar.className = "bar-fill bar-" + tier;
+
+    document.getElementById("fuelLeft").textContent  = Math.round(fuelLeft) + " g";
+    document.getElementById("canisterWt").textContent = c.empty + " g";
+    document.getElementById("fullWt").textContent     = c.full + " g";
+    document.getElementById("fuelCap").textContent    = c.fuel + " g";
+
+    // Hint
+    const hints = {
+      full:  "You're good to go! 🏔️",
+      high:  "Plenty of fuel for your trip.",
+      mid:   "Consider whether this is enough for your planned meals.",
+      low:   "Running low — plan accordingly or bring a backup.",
+      empty: "Canister is essentially empty.",
+    };
+    document.getElementById("hintText").textContent = hints[tier];
+
+    updateBoils();
+    result.classList.add("visible");
+  }
+</script>
+
+</body>
+</html>
