@@ -1,12 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fuel Canister Checker</title>
+  <title>Backpacking Fuel Canister Capacity Calculator</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #1a1a2e;
@@ -17,7 +17,6 @@
       align-items: center;
       padding: 24px 16px 48px;
     }
-
     h1 {
       font-size: 1.4rem;
       font-weight: 700;
@@ -25,13 +24,11 @@
       margin-bottom: 4px;
       color: #fff;
     }
-
     .subtitle {
       font-size: 0.85rem;
       color: #888;
       margin-bottom: 28px;
     }
-
     .card {
       background: #16213e;
       border-radius: 16px;
@@ -40,7 +37,6 @@
       max-width: 420px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     }
-
     label {
       display: block;
       font-size: 0.75rem;
@@ -50,7 +46,6 @@
       color: #888;
       margin-bottom: 8px;
     }
-
     select, input[type="number"] {
       width: 100%;
       background: #0f3460;
@@ -65,15 +60,12 @@
       -webkit-appearance: none;
       margin-bottom: 20px;
     }
-
     select:focus, input[type="number"]:focus {
       border-color: #e94560;
     }
-
     .select-wrapper {
       position: relative;
     }
-
     .select-wrapper::after {
       content: "▾";
       position: absolute;
@@ -84,28 +76,28 @@
       color: #888;
       font-size: 1.1rem;
     }
-
     input[type="number"]::-webkit-inner-spin-button { opacity: 0.4; }
-
     .weight-row {
       display: flex;
       gap: 10px;
       align-items: flex-end;
       margin-bottom: 20px;
     }
-
     .weight-row > div { flex: 1; margin-bottom: 0; }
     .weight-row select { margin-bottom: 0; }
     .weight-row input { margin-bottom: 0; }
-
+    .weight-range-hint {
+      font-size: 0.75rem;
+      color: #666;
+      margin-bottom: 8px;
+      min-height: 1em;
+    }
     /* Result */
     .result {
       display: none;
       margin-top: 8px;
     }
-
     .result.visible { display: block; }
-
     .fuel-pct {
       font-size: 3.5rem;
       font-weight: 800;
@@ -113,14 +105,12 @@
       line-height: 1;
       margin-bottom: 6px;
     }
-
     .fuel-label {
       text-align: center;
       font-size: 0.85rem;
       color: #888;
       margin-bottom: 20px;
     }
-
     .bar-bg {
       background: #0f3460;
       border-radius: 999px;
@@ -128,32 +118,27 @@
       overflow: hidden;
       margin-bottom: 20px;
     }
-
     .bar-fill {
       height: 100%;
       border-radius: 999px;
       transition: width 0.5s ease, background 0.5s ease;
     }
-
     .details-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-
     .detail-box {
       background: #0f3460;
       border-radius: 10px;
       padding: 12px;
       text-align: center;
     }
-
     .detail-val {
       font-size: 1.3rem;
       font-weight: 700;
       color: #fff;
     }
-
     .detail-lbl {
       font-size: 0.7rem;
       color: #888;
@@ -161,14 +146,12 @@
       letter-spacing: 0.8px;
       margin-top: 2px;
     }
-
     .hint {
       text-align: center;
       font-size: 0.82rem;
       color: #555;
       margin-top: 14px;
     }
-
     .error-msg {
       display: none;
       background: #3d1520;
@@ -180,22 +163,18 @@
       text-align: center;
       margin-top: 8px;
     }
-
     .error-msg.visible { display: block; }
-
     /* color coding */
     .color-full    { color: #4ade80; }
     .color-high    { color: #86efac; }
     .color-mid     { color: #fbbf24; }
     .color-low     { color: #fb923c; }
     .color-empty   { color: #e94560; }
-
     .bar-full  { background: #4ade80; }
     .bar-high  { background: #86efac; }
     .bar-mid   { background: #fbbf24; }
     .bar-low   { background: #fb923c; }
     .bar-empty { background: #e94560; }
-
     /* Boil box */
     .boil-box {
       background: #0f3460;
@@ -205,16 +184,12 @@
       margin-top: 10px;
       margin-bottom: 10px;
     }
-
-    .boil-icon { font-size: 1.4rem; margin-bottom: 4px; }
-
     .boil-count {
       font-size: 2.6rem;
       font-weight: 800;
       color: #fff;
       line-height: 1;
     }
-
     .boil-lbl {
       font-size: 0.72rem;
       color: #888;
@@ -223,14 +198,12 @@
       margin-top: 3px;
       margin-bottom: 8px;
     }
-
     .boil-sub {
       font-size: 0.78rem;
       color: #aaa;
       margin-bottom: 12px;
       min-height: 1em;
     }
-
     .boil-size-row {
       display: flex;
       align-items: center;
@@ -238,7 +211,6 @@
       gap: 6px;
       flex-wrap: wrap;
     }
-
     .boil-size-lbl {
       font-size: 0.72rem;
       color: #666;
@@ -246,7 +218,6 @@
       letter-spacing: 0.6px;
       margin-right: 2px;
     }
-
     .boil-btn {
       background: #1a4a7a;
       border: 1px solid #1a4a7a;
@@ -257,28 +228,47 @@
       cursor: pointer;
       transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
-
     .boil-btn.active {
       background: #e94560;
       border-color: #e94560;
       color: #fff;
       font-weight: 600;
     }
-
+    /* Social footer */
+    .social-footer {
+      margin-top: 32px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+    }
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #888;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .social-link:hover { color: #eee; }
+    .social-link svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
     @media (max-width: 380px) {
       .fuel-pct { font-size: 2.8rem; }
     }
   </style>
 </head>
 <body>
-
-<h1>⛽ Fuel Canister Checker</h1>
+<h1>Backpacking Fuel Canister Capacity Calculator</h1>
 <p class="subtitle">Weigh your canister → know your fuel</p>
-
 <div class="card">
   <label>Canister Brand &amp; Size</label>
   <div class="select-wrapper">
-    <select id="canister" onchange="calculate()">
+    <select id="canister" onchange="onCanisterChange()">
       <option value="">— Select canister —</option>
       <option value="coleman-220">Coleman 220 g</option>
       <option value="jetboil-100">Jetboil 100 g</option>
@@ -296,8 +286,8 @@
       <option value="snowpeak-220">SnowPeak Gigapower 220 g</option>
     </select>
   </div>
-
   <label>Current Weight</label>
+  <div class="weight-range-hint" id="weightRangeHint"></div>
   <div class="weight-row">
     <div style="flex:2">
       <input type="number" id="weight" placeholder="e.g. 220" min="0" max="800" oninput="calculate()" />
@@ -311,17 +301,13 @@
       </div>
     </div>
   </div>
-
   <div class="error-msg" id="errorMsg"></div>
-
   <div class="result" id="result">
     <div class="fuel-pct" id="pctDisplay">—</div>
     <div class="fuel-label">fuel remaining</div>
-
     <div class="bar-bg">
       <div class="bar-fill" id="barFill" style="width:0%"></div>
     </div>
-
     <div class="details-grid">
       <div class="detail-box">
         <div class="detail-val" id="fuelLeft">—</div>
@@ -340,9 +326,7 @@
         <div class="detail-lbl">Total capacity (g)</div>
       </div>
     </div>
-
     <div class="boil-box" id="boilBox">
-      <div class="boil-icon">🔥</div>
       <div class="boil-count" id="boilCount">—</div>
       <div class="boil-lbl">estimated boils left</div>
       <div class="boil-sub" id="boilSub"></div>
@@ -353,24 +337,37 @@
         <button class="boil-btn"        data-g="16" onclick="setPotSize(this)">1 L</button>
       </div>
     </div>
-
     <p class="hint" id="hintText"></p>
   </div>
+</div>
+
+<div class="social-footer">
+  <a class="social-link" href="https://www.instagram.com/camsbackpackinggear/" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+    </svg>
+    @camsbackpackinggear
+  </a>
+  <a class="social-link" href="https://www.youtube.com/@HikingWithCam" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.2 2.8 12 2.8 12 2.8s-4.2 0-6.8.2c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.3v2c0 2.1.3 4.3.3 4.3s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.5 21.8 12 21.8 12 21.8s4.2 0 6.8-.3c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.1.3-4.3v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.1l8.1 3.7-8.1 3.7z"/>
+    </svg>
+    HikingWithCam
+  </a>
 </div>
 
 <script>
   // g of fuel per boil by pot size
   let gPerBoil = 8; // default: 500 ml
-
   function setPotSize(btn) {
     document.querySelectorAll(".boil-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     gPerBoil = parseInt(btn.dataset.g);
     updateBoils();
   }
-
   let lastFuelLeft = 0;
-
   function updateBoils() {
     if (lastFuelLeft === null) return;
     const boils = Math.floor(lastFuelLeft / gPerBoil);
@@ -381,9 +378,7 @@
         ? `~${gPerBoil}g fuel per ${potLabels[gPerBoil]} boil`
         : "Not enough fuel for a full boil";
   }
-
   // Data: { empty, full, fuelWeight }
-  // All values from the reference table (empty = 0%, full = 100%)
   const CANISTERS = {
     "coleman-220":    { empty: 143, full: 363, fuel: 220 },
     "jetboil-100":    { empty: 99,  full: 199, fuel: 100 },
@@ -400,22 +395,28 @@
     "snowpeak-110":   { empty: 103, full: 213, fuel: 110 },
     "snowpeak-220":   { empty: 150, full: 370, fuel: 220 },
   };
-
+  function onCanisterChange() {
+    const key = document.getElementById("canister").value;
+    const hint = document.getElementById("weightRangeHint");
+    if (key && CANISTERS[key]) {
+      const c = CANISTERS[key];
+      hint.textContent = `Accepted range: ${c.empty}g (empty) – ${c.full}g (full)`;
+    } else {
+      hint.textContent = "";
+    }
+    calculate();
+  }
   function calculate() {
     const key = document.getElementById("canister").value;
     const rawWeight = parseFloat(document.getElementById("weight").value);
     const unit = document.getElementById("unit").value;
     const result = document.getElementById("result");
     const errMsg = document.getElementById("errorMsg");
-
     result.classList.remove("visible");
     errMsg.classList.remove("visible");
-
     if (!key || isNaN(rawWeight) || rawWeight === "") return;
-
     const weightG = unit === "oz" ? rawWeight * 28.3495 : rawWeight;
     const c = CANISTERS[key];
-
     if (weightG < c.empty - 5) {
       errMsg.textContent = `Weight seems too low — empty ${c.fuel}g canister weighs ${c.empty}g.`;
       errMsg.classList.add("visible");
@@ -426,11 +427,9 @@
       errMsg.classList.add("visible");
       return;
     }
-
     const fuelLeft = Math.max(0, weightG - c.empty);
     lastFuelLeft = fuelLeft;
     const pct = Math.min(100, Math.round((fuelLeft / c.fuel) * 100));
-
     // Color tier
     let tier;
     if (pct >= 70)      tier = "full";
@@ -438,20 +437,16 @@
     else if (pct >= 20) tier = "mid";
     else if (pct > 0)   tier = "low";
     else                tier = "empty";
-
     const pctEl = document.getElementById("pctDisplay");
     pctEl.textContent = pct + "%";
     pctEl.className = "fuel-pct color-" + tier;
-
     const bar = document.getElementById("barFill");
     bar.style.width = pct + "%";
     bar.className = "bar-fill bar-" + tier;
-
     document.getElementById("fuelLeft").textContent  = Math.round(fuelLeft) + " g";
     document.getElementById("canisterWt").textContent = c.empty + " g";
     document.getElementById("fullWt").textContent     = c.full + " g";
     document.getElementById("fuelCap").textContent    = c.fuel + " g";
-
     // Hint
     const hints = {
       full:  "You're good to go! 🏔️",
@@ -461,11 +456,9 @@
       empty: "Canister is essentially empty.",
     };
     document.getElementById("hintText").textContent = hints[tier];
-
     updateBoils();
     result.classList.add("visible");
   }
 </script>
-
 </body>
 </html>
