@@ -401,7 +401,7 @@
     const hint = document.getElementById("weightRangeHint");
     if (key && CANISTERS[key]) {
       const c = CANISTERS[key];
-      hint.textContent = `Accepted range: ${c.empty}g (empty) – ${c.full}g (full)`;
+      hint.textContent = `Zakres wagi: ${c.empty}g (pusty) – ${c.full}g (pełny)`;
     } else {
       hint.textContent = "";
     }
@@ -419,12 +419,12 @@
     const weightG = unit === "oz" ? rawWeight * 28.3495 : rawWeight;
     const c = CANISTERS[key];
     if (weightG < c.empty - 5) {
-      errMsg.textContent = `Weight seems too low — empty ${c.fuel}g canister weighs ${c.empty}g.`;
+      errMsg.textContent = `Waga wydaje sięzbyt niska — kartusz pusty ${c.fuel}g kartusz waży ${c.empty}g.`;
       errMsg.classList.add("visible");
       return;
     }
     if (weightG > c.full + 5) {
-      errMsg.textContent = `Weight seems too high — full ${c.fuel}g canister weighs ${c.full}g.`;
+      errMsg.textContent = `Waga wydaje się zbyt wysoka — kartusz pełny ${c.fuel}g kartusz waży ${c.full}g.`;
       errMsg.classList.add("visible");
       return;
     }
