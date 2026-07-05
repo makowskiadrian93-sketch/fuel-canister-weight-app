@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Backpacking Fuel Canister Capacity Calculator</title>
+  <title>KALKULATOR ZAWARTOŚCI KARTUSZA TURYSTYCZNEGO</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥾</text></svg>" />
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -264,8 +264,8 @@
   </style>
 </head>
 <body>
-<h1>Backpacking Fuel Canister Capacity Calculator</h1>
-<p class="subtitle">Weigh your canister → know your fuel</p>
+<h1>KALKULATOR ZAWARTOŚCI KARTUSZA TURYSTYCZNEGO</h1>
+<p class="subtitle">Zważ swój kartusz → sprawdż ile gazu zostało</p>
 <div class="card">
   <label>Canister Brand &amp; Size</label>
   <div class="select-wrapper">
@@ -287,7 +287,7 @@
       <option value="snowpeak-220">SnowPeak Gigapower 220 g</option>
     </select>
   </div>
-  <label>Current Weight</label>
+  <label>Obecna waga</label>
   <div class="weight-range-hint" id="weightRangeHint"></div>
   <div class="weight-row">
     <div style="flex:2">
@@ -305,7 +305,7 @@
   <div class="error-msg" id="errorMsg"></div>
   <div class="result" id="result">
     <div class="fuel-pct" id="pctDisplay">—</div>
-    <div class="fuel-label">fuel remaining</div>
+    <div class="fuel-label">pozostały gaz</div>
     <div class="bar-bg">
       <div class="bar-fill" id="barFill" style="width:0%"></div>
     </div>
@@ -316,23 +316,23 @@
       </div>
       <div class="detail-box">
         <div class="detail-val" id="canisterWt">—</div>
-        <div class="detail-lbl">Empty weight (g)</div>
+        <div class="detail-lbl">Waga pustego (g)</div>
       </div>
       <div class="detail-box">
         <div class="detail-val" id="fullWt">—</div>
-        <div class="detail-lbl">Full weight (g)</div>
+        <div class="detail-lbl">Waga pełnego (g)</div>
       </div>
       <div class="detail-box">
         <div class="detail-val" id="fuelCap">—</div>
-        <div class="detail-lbl">Total capacity (g)</div>
+        <div class="detail-lbl">Pozostała zawartość (g)</div>
       </div>
     </div>
     <div class="boil-box" id="boilBox">
       <div class="boil-count" id="boilCount">—</div>
-      <div class="boil-lbl">estimated boils left</div>
+      <div class="boil-lbl">ilość "zagotowań wody"</div>
       <div class="boil-sub" id="boilSub"></div>
       <div class="boil-size-row">
-        <span class="boil-size-lbl">Pot size:</span>
+        <span class="boil-size-lbl">Rozmiar garnka:</span>
         <button class="boil-btn active" data-g="8"  onclick="setPotSize(this)">500 ml</button>
         <button class="boil-btn"        data-g="12" onclick="setPotSize(this)">750 ml</button>
         <button class="boil-btn"        data-g="16" onclick="setPotSize(this)">1 L</button>
@@ -343,19 +343,19 @@
 </div>
 
 <div class="social-footer">
-  <a class="social-link" href="https://www.instagram.com/camsbackpackinggear/" target="_blank" rel="noopener">
+  <a class="social-link" href="https://www.instagram.com/planeta_alp/" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
       <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
       <circle cx="12" cy="12" r="4"/>
       <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
     </svg>
-    @camsbackpackinggear
+    @planeta_alp
   </a>
   <a class="social-link" href="https://www.youtube.com/@HikingWithCam" target="_blank" rel="noopener">
     <svg viewBox="0 0 24 24" fill="currentColor">
       <path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.2 2.8 12 2.8 12 2.8s-4.2 0-6.8.2c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.3v2c0 2.1.3 4.3.3 4.3s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.5 21.8 12 21.8 12 21.8s4.2 0 6.8-.3c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.1.3-4.3v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.1l8.1 3.7-8.1 3.7z"/>
     </svg>
-    HikingWithCam
+    Planeta ALp
   </a>
 </div>
 
@@ -450,11 +450,11 @@
     document.getElementById("fuelCap").textContent    = c.fuel + " g";
     // Hint
     const hints = {
-      full:  "You're good to go! 🏔️",
-      high:  "Plenty of fuel for your trip.",
-      mid:   "Consider whether this is enough for your planned meals.",
-      low:   "Running low — plan accordingly or bring a backup.",
-      empty: "Canister is essentially empty.",
+      full:  "Jest git! 🏔️",
+      high:  "Wystarczy na Twojego tripa.",
+      mid:   "Przelicz, czy na pewno wystarczy.",
+      low:   "Trochę cienko - dokup jeden kartusz.",
+      empty: "Kartusz w zasadzie pusty.",
     };
     document.getElementById("hintText").textContent = hints[tier];
     updateBoils();
