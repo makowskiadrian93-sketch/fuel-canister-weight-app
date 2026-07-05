@@ -385,8 +385,8 @@
     const potLabels = { 8: "500 ml", 12: "750 ml", 16: "1 L" };
     document.getElementById("boilSub").textContent =
       boils > 0
-        ? `~${gPerBoil}g fuel per ${potLabels[gPerBoil]} boil`
-        : "Not enough fuel for a full boil";
+        ? `~${gPerBoil}gramów gazu na zagotowanie ${potLabels[gPerBoil]} wody`
+        : "Zbyt mało gazu na jedno zagotowania.";
   }
   // Data: { empty, full, fuelWeight }
   const CANISTERS = {
